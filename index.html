@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Efecto de Partículas PixiJS</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/7.2.4/pixi.min.js"></script>
+</head>
+<body>
+    <div id="controls-panel">
+      <label>Número de partículas<br>
+        <input id="numParticles" type="number" min="1" max="999" value="500">
+      </label>
+      <label>Fuerza de repulsión<br>
+        <input id="repulseForce" type="number" min="0" max="10" step="0.1" value="0.5">
+      </label>
+      <label><input id="showLines" type="checkbox" checked> Líneas de conexión</label>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
