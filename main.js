@@ -144,11 +144,14 @@ const repulseForceInput = document.getElementById('repulseForce');
 const showLinesInput = document.getElementById('showLines');
 const scatterBtn = document.getElementById('scatterBtn');
 const toCenterBtn = document.getElementById('toCenterBtn');
+const toSquareBtn = document.getElementById('toSquareBtn');
 
 let isScattering = false;
 let scatterTimeout = null;
 let isToCenter = false;
 let toCenterTimeout = null;
+let isToSquare = false;
+let toSquareTimeout = null;
 
 scatterBtn.addEventListener('click', () => {
     if (isScattering) return;
@@ -187,6 +190,36 @@ toCenterBtn.addEventListener('click', () => {
             particles[i].homeY = centerY + Math.sin(angle) * circleRadius;
         }
         isToCenter = false;
+    }, 2000);
+});
+
+toSquareBtn.addEventListener('click', () => {
+    if (isToSquare) return;
+    isToSquare = true;
+    // Calcular el tamaño del cuadrado y la cantidad de filas/columnas
+    const n = particles.length;
+    const side = Math.ceil(Math.sqrt(n));
+    const spacing = Math.min(window.innerWidth, window.innerHeight) * 0.6 / side;
+    const startX = window.innerWidth / 2 - (side - 1) * spacing / 2;
+    const startY = window.innerHeight / 2 - (side - 1) * spacing / 2;
+    for (let i = 0; i < n; i++) {
+        const row = Math.floor(i / side);
+        const col = i % side;
+        particles[i].homeX = startX + col * spacing;
+        particles[i].homeY = startY + row * spacing;
+    }
+    // Después de 2 segundos, restaurar el home original (círculo)
+    if (toSquareTimeout) clearTimeout(toSquareTimeout);
+    toSquareTimeout = setTimeout(() => {
+        const centerX = window.innerWidth / 2;
+        const centerY = window.innerHeight / 2;
+        const circleRadius = Math.min(window.innerWidth, window.innerHeight) * 0.3;
+        for (let i = 0; i < particles.length; i++) {
+            const angle = (i / particles.length) * Math.PI * 2;
+            particles[i].homeX = centerX + Math.cos(angle) * circleRadius;
+            particles[i].homeY = centerY + Math.sin(angle) * circleRadius;
+        }
+        isToSquare = false;
     }, 2000);
 });
 
