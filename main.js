@@ -142,6 +142,27 @@ let showLines = true;
 const numParticlesInput = document.getElementById('numParticles');
 const repulseForceInput = document.getElementById('repulseForce');
 const showLinesInput = document.getElementById('showLines');
+const scatterBtn = document.getElementById('scatterBtn');
+
+let isScattering = false;
+let scatterTimeout = null;
+
+scatterBtn.addEventListener('click', () => {
+    if (isScattering) return;
+    isScattering = true;
+    // Dar velocidad aleatoria a cada partícula
+    for (let p of particles) {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = Math.random() * 400 + 200; // velocidad fuerte
+        p.vx += Math.cos(angle) * speed;
+        p.vy += Math.sin(angle) * speed;
+    }
+    // Después de 2 segundos, permitir que regresen a su posición
+    if (scatterTimeout) clearTimeout(scatterTimeout);
+    scatterTimeout = setTimeout(() => {
+        isScattering = false;
+    }, 2000);
+});
 
 numParticlesInput.addEventListener('input', (e) => {
     let val = parseInt(e.target.value);
@@ -184,7 +205,8 @@ function updateParticles(newCount) {
 app.ticker.add(() => {
     for (let i = 0; i < particles.length; i++) {
         // Si el mouse está fuera del canvas, no aplicar repulsión
-        particles[i].update(mouseX, mouseY, particles);
+        // Si está dispersando, no aplicar repulsión del mouse
+        particles[i].update(isScattering ? null : mouseX, isScattering ? null : mouseY, particles);
     }
     outline.clear();
     if (showLines && particles.length > 1) {
